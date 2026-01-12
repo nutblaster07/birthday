@@ -5,14 +5,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Birthday Celebration</title>
 
- 
+
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@1&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css" />
+
   <style>
     :root {
-      --bg-image: url("b.png");  
+      --bg-image: url("b.png");   
       --accent: #c97b84;
     }
+
     * {
       margin: 0;
       padding: 0;
@@ -31,7 +32,7 @@
       padding: 20px;
     }
 
-    /* -------- HEADER CONTROLS -------- */
+    
 
     .music-button {
       position: fixed;
@@ -70,7 +71,6 @@
       font-size: 12px;
     }
 
-    /* -------- HAMBURGER MENU -------- */
 
     .hamburger {
       position: fixed;
@@ -112,7 +112,7 @@
       transform: rotate(-45deg) translate(6px, -6px);
     }
 
-    /* -------- NAVIGATION -------- */
+   
 
     .nav-menu {
       position: fixed;
@@ -139,7 +139,7 @@
       color: var(--accent);
     }
 
-    /* -------- MAIN -------- */
+   
 
     .container {
       max-width: 900px;
@@ -165,7 +165,7 @@
       text-shadow: 1px 1px 4px rgba(0,0,0,.4);
     }
 
-    /* -------- TIMER -------- */
+    
 
     .time-container {
       display: grid;
@@ -201,7 +201,7 @@
       margin-top: 5px;
     }
 
-    /* -------- RESPONSIVE -------- */
+  
 
     @media (max-width: 968px) {
       .hamburger {
@@ -275,53 +275,63 @@
       }
 
       .music-button {
-        top: 15px;
-        left: 15px;
-        padding: 10px 16px;
-        font-size: 12px;
+        top: 12px;
+        left: 12px;
+        padding: 8px 14px;
+        font-size: 11px;
       }
 
       .music-icon {
-        width: 18px;
-        height: 18px;
-        font-size: 10px;
+        width: 16px;
+        height: 16px;
+        font-size: 9px;
       }
 
       .hamburger {
-        top: 15px;
-        right: 15px;
-        width: 38px;
-        height: 38px;
+        top: 12px;
+        right: 12px;
+        width: 36px;
+        height: 36px;
+      }
+
+      .hero {
+        min-height: auto;
+        padding: 60px 0 30px;
       }
 
       .container {
-        padding-top: 100px;
+        padding-top: 10px;
       }
 
       .message { 
-        font-size: 26px; 
+        font-size: 22px; 
+        margin-bottom: 6px;
       }
 
       .subtitle {
-        font-size: 14px;
-        margin-bottom: 30px;
+        font-size: 12px;
+        margin-bottom: 20px;
       }
 
       .time-container {
-        grid-template-columns: 1fr;
-        gap: 12px;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+        max-width: 320px;
+        margin: 0 auto;
       }
 
       .time-box {
-        padding: 20px 15px;
+        padding: 12px 8px;
+        border-radius: 10px;
       }
 
       .time-number {
-        font-size: 32px;
+        font-size: 18px;
       }
 
       .time-label {
-        font-size: 14px;
+        font-size: 10px;
+        margin-top: 3px;
       }
     }
   </style>
@@ -329,12 +339,13 @@
 
 <body>
 
+  
   <audio id="bgMusic" src="song.mp3" preload="auto"></audio>
 
-  
+ 
   <button class="music-button" id="musicBtn">
     <span class="music-icon">♪</span>
-    Play Your Favorite Song
+    Play Her Favorite Song
   </button>
 
   
@@ -344,13 +355,12 @@
     <span></span>
   </button>
 
- 
+  
   <div class="nav-menu" id="navMenu">
     <a href="memories.html">Memories</a>
-    <a href="message.html">Messages</a>
+    <a href="messages.html">Messages</a>
     <a href="music.html">Music</a>
-    <a href="quiz.html">Quiz</a>
-    <a href="surprise.html">Surprise</a>
+    <a href="fun.html">Fun</a>
   </div>
 
   
@@ -378,9 +388,9 @@
     </div>
   </div>
 
-
+ 
   <script>
-    
+   
     const birthDate = new Date("2002-02-03T00:00:00");
 
     function updateTimer() {
@@ -403,7 +413,7 @@
     updateTimer();
     setInterval(updateTimer, 1000);
 
-
+    
     const music = document.getElementById("bgMusic");
     const btn = document.getElementById("musicBtn");
     let playing = false;
@@ -419,6 +429,7 @@
       playing = !playing;
     });
 
+    
     const hamburger = document.getElementById("hamburger");
     const navMenu = document.getElementById("navMenu");
 
@@ -435,7 +446,7 @@
       });
     });
 
-
+   
     document.addEventListener("click", (e) => {
       if (!hamburger.contains(e.target) && !navMenu.contains(e.target)) {
         hamburger.classList.remove("active");
