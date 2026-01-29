@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Solve the Puzzle</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#f4ece6;
+  --accent:#c97b84;
+  --text:#6b5b53;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+  background:var(--bg);
+  font-family:"Poppins",sans-serif;
+  color:var(--text);
+  min-height:100vh;
+}
+
+/* NAV */
+.top-nav{
+  display:flex;
+  justify-content:flex-end;
+  gap:20px;
+  padding:20px;
+}
+.top-nav a{
+  text-decoration:none;
+  color:#8a7b74;
+  font-weight:600;
+}
+
+/* PAGE */
+.wrapper{
+  max-width:900px;
+  margin:auto;
+  padding:20px;
+  text-align:center;
+}
+
+h1{
+  font-family:"Playfair Display",serif;
+  font-size:36px;
+  margin-bottom:10px;
+}
+
+.subtitle{
+  margin-bottom:30px;
+  opacity:.8;
+}
+
+/* PUZZLE */
+.puzzle-board{
+  width:300px;
+  height:300px;
+  margin:0 auto 30px;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  grid-template-rows:repeat(3,1fr);
+  gap:2px;
+  border-radius:12px;
+  overflow:hidden;
+  box-shadow:0 10px 25px rgba(0,0,0,.15);
+}
+
+.tile{
+  background-image:url("puzzle.jpg"); /* 🔁 replace image */
+  background-size:300px 300px;
+  cursor:pointer;
+}
+
+/* SECRET MESSAGE */
+.secret{
+  display:none;
+  margin-top:30px;
+  background:#fff;
+  padding:30px 25px;
+  border-radius:14px;
+  box-shadow:0 12px 30px rgba(0,0,0,.1);
+  animation:fadeIn 1s ease forwards;
+}
+
+.secret h2{
+  font-family:"Playfair Display",serif;
+  color:var(--accent);
+  margin-bottom:10px;
+}
+
+.secret p{
+  font-size:16px;
+  line-height:1.6;
+}
+
+.next-btn{
+  display:inline-block;
+  margin-top:20px;
+  padding:12px 26px;
+  background:var(--accent);
+  color:#fff;
+  border-radius:30px;
+  text-decoration:none;
+  font-weight:600;
+}
+
+@keyframes fadeIn{
+  from{opacity:0; transform:translateY(10px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+/* MOBILE */
+@media(max-width:500px){
+  .puzzle-board{
+    width:260px;
+    height:260px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="top-nav">
+  <a href="index.html">Home</a>
+  <a href="memories.html">Memories</a>
+  <a href="music.html">Music</a>
+</div>
+
+<div class="wrapper">
+  <h1>Solve the Puzzle 🧩</h1>
+  <p class="subtitle">Only then will the secret reveal</p>
+
+  <div class="puzzle-board" id="board"></div>
+
+  <!-- SECRET MESSAGE -->
+  <div class="secret" id="secret">
+    <h2>For You 💖</h2>
+    <p>
+      Every piece you just put together  
+      reminds me of how perfectly  
+      you fit into my life.  
+
+      You are my favorite memory,  
+      my safest place,  
+      and my happiest thought.
+    </p>
+
+    <a href="surprise.html" class="next-btn">
+      One last surprise →
+    </a>
+  </div>
+</div>
+
+<script>
+const board = document.getElementById("board");
+const secret = document.getElementById("secret");
+const size = 3;
+let tiles = [];
+let empty = size*size - 1;
+
+function init(){
+  tiles = [];
+  board.innerHTML = "";
+  secret.style.display="none";
+
+  for(let i=0;i<size*size;i++){
+    const tile = document.createElement("div");
+    tile.className = "tile";
+    tile.dataset.index = i;
+
+    if(i === empty){
+      tile.style.background = "transparent";
+    }else{
+      const x = (i % size) * -100;
+      const y = Math.floor(i / size) * -100;
+      tile.style.backgroundPosition = `${x}px ${y}px`;
+    }
+
+    tile.addEventListener("click",()=>move(i));
+    tiles.push(tile);
+  }
+
+  shuffle();
+  tiles.forEach(t=>board.appendChild(t));
+}
+
+function shuffle(){
+  for(let i=0;i<200;i++){
+    const neighbors = getNeighbors(empty);
+    const rand = neighbors[Math.floor(Math.random()*neighbors.length)];
+    swap(rand, empty);
+    empty = rand;
+  }
+}
+
+function move(i){
+  if(getNeighbors(empty).includes(i)){
+    swap(i, empty);
+    empty = i;
+    checkWin();
+  }
+}
+
+function swap(a,b){
+  [tiles[a].style.backgroundPosition, tiles[b].style.backgroundPosition] =
+  [tiles[b].style.backgroundPosition, tiles[a].style.backgroundPosition];
+}
+
+function getNeighbors(i){
+  const n=[];
+  const r=Math.floor(i/size), c=i%size;
+  if(r>0) n.push(i-size);
+  if(r<size-1) n.push(i+size);
+  if(c>0) n.push(i-1);
+  if(c<size-1) n.push(i+1);
+  return n;
+}
+
+function checkWin(){
+  for(let i=0;i<tiles.length;i++){
+    if(i===empty) continue;
+    const correctX=(i%size)*-100;
+    const correctY=Math.floor(i/size)*-100;
+    if(tiles[i].style.backgroundPosition !== `${correctX}px ${correctY}px`)
+      return;
+  }
+  secret.style.display="block";
+}
+
+init();
+</script>
+
+</body>
+</html>
