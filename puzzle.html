@@ -12,6 +12,7 @@
   --bg:#f4ece6;
   --accent:#c97b84;
   --text:#6b5b53;
+  --tile-size: 300px;
 }
 
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -21,6 +22,7 @@ body{
   font-family:"Poppins",sans-serif;
   color:var(--text);
   min-height:100vh;
+  overflow-x:hidden;
 }
 
 /* NAV */
@@ -29,95 +31,348 @@ body{
   justify-content:flex-end;
   gap:20px;
   padding:20px;
+  flex-wrap:wrap;
 }
 .top-nav a{
   text-decoration:none;
   color:#8a7b74;
   font-weight:600;
+  transition:all 0.3s ease;
+  padding:8px 16px;
+  border-radius:8px;
+}
+.top-nav a:hover{
+  background:rgba(201,123,132,0.1);
+  color:var(--accent);
+  transform:translateY(-2px);
 }
 
 /* PAGE */
 .wrapper{
   max-width:900px;
   margin:auto;
-  padding:20px;
+  padding:40px 20px;
   text-align:center;
 }
 
 h1{
   font-family:"Playfair Display",serif;
-  font-size:36px;
-  margin-bottom:10px;
+  font-size:42px;
+  margin-bottom:12px;
+  animation:slideDown 0.6s ease;
 }
 
 .subtitle{
-  margin-bottom:30px;
+  margin-bottom:40px;
   opacity:.8;
+  font-size:16px;
+  animation:slideDown 0.6s ease 0.1s backwards;
+}
+
+/* CONTROLS */
+.controls{
+  margin-bottom:25px;
+  display:flex;
+  gap:15px;
+  justify-content:center;
+  align-items:center;
+  flex-wrap:wrap;
+  animation:slideDown 0.6s ease 0.2s backwards;
+}
+
+.controls button{
+  padding:12px 24px;
+  background:#fff;
+  border:2px solid var(--accent);
+  color:var(--accent);
+  border-radius:30px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all 0.3s ease;
+  font-family:"Poppins",sans-serif;
+  font-size:14px;
+}
+
+.controls button:hover{
+  background:var(--accent);
+  color:#fff;
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(201,123,132,0.3);
+}
+
+.controls button:active{
+  transform:translateY(0);
+}
+
+.timer{
+  font-weight:600;
+  color:var(--accent);
+  font-size:18px;
+  min-width:80px;
 }
 
 /* PUZZLE */
+.puzzle-container{
+  animation:slideDown 0.6s ease 0.3s backwards;
+}
+
 .puzzle-board{
-  width:300px;
-  height:300px;
+  width:var(--tile-size);
+  height:var(--tile-size);
   margin:0 auto 30px;
   display:grid;
   grid-template-columns:repeat(3,1fr);
   grid-template-rows:repeat(3,1fr);
-  gap:2px;
-  border-radius:12px;
+  gap:3px;
+  border-radius:16px;
   overflow:hidden;
-  box-shadow:0 10px 25px rgba(0,0,0,.15);
+  box-shadow:0 15px 40px rgba(0,0,0,.2);
+  background:#fff;
+  transition:all 0.3s ease;
+}
+
+.puzzle-board:hover{
+  box-shadow:0 18px 50px rgba(0,0,0,.25);
 }
 
 .tile{
   background-image:url("puzzle.jpg"); /* 🔁 replace image */
-  background-size:300px 300px;
+  background-size:var(--tile-size) var(--tile-size);
   cursor:pointer;
+  transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position:relative;
+  border-radius:2px;
+}
+
+.tile:not(.empty):hover{
+  transform:scale(1.02);
+  box-shadow:0 4px 12px rgba(0,0,0,0.15);
+  z-index:10;
+}
+
+.tile:not(.empty):active{
+  transform:scale(0.98);
+}
+
+.tile.empty{
+  background:rgba(201,123,132,0.08) !important;
+  cursor:default;
+  border:2px dashed rgba(201,123,132,0.3);
+}
+
+/* WIN ANIMATION */
+@keyframes tilePop{
+  0%{transform:scale(1);}
+  50%{transform:scale(1.1) rotate(5deg);}
+  100%{transform:scale(1) rotate(0deg);}
+}
+
+.tile.win-animation{
+  animation:tilePop 0.5s ease;
 }
 
 /* SECRET MESSAGE */
 .secret{
   display:none;
-  margin-top:30px;
+  margin-top:40px;
   background:#fff;
-  padding:30px 25px;
-  border-radius:14px;
-  box-shadow:0 12px 30px rgba(0,0,0,.1);
-  animation:fadeIn 1s ease forwards;
+  padding:40px 30px;
+  border-radius:20px;
+  box-shadow:0 20px 50px rgba(0,0,0,.15);
+  animation:fadeInUp 0.8s ease forwards;
+  max-width:600px;
+  margin-left:auto;
+  margin-right:auto;
 }
 
 .secret h2{
   font-family:"Playfair Display",serif;
   color:var(--accent);
-  margin-bottom:10px;
+  margin-bottom:15px;
+  font-size:32px;
 }
 
 .secret p{
-  font-size:16px;
-  line-height:1.6;
+  font-size:17px;
+  line-height:1.8;
+  color:var(--text);
 }
 
 .next-btn{
   display:inline-block;
-  margin-top:20px;
-  padding:12px 26px;
+  margin-top:25px;
+  padding:14px 32px;
   background:var(--accent);
   color:#fff;
   border-radius:30px;
   text-decoration:none;
   font-weight:600;
+  transition:all 0.3s ease;
+  font-size:15px;
 }
 
-@keyframes fadeIn{
-  from{opacity:0; transform:translateY(10px);}
+.next-btn:hover{
+  background:#b56b74;
+  transform:translateY(-3px);
+  box-shadow:0 8px 20px rgba(201,123,132,0.4);
+}
+
+.next-btn:active{
+  transform:translateY(-1px);
+}
+
+/* ANIMATIONS */
+@keyframes fadeInUp{
+  from{opacity:0; transform:translateY(30px);}
   to{opacity:1; transform:translateY(0);}
+}
+
+@keyframes slideDown{
+  from{opacity:0; transform:translateY(-20px);}
+  to{opacity:1; transform:translateY(0);}
+}
+
+/* CONFETTI */
+.confetti{
+  position:fixed;
+  width:10px;
+  height:10px;
+  background:var(--accent);
+  position:absolute;
+  animation:confettiFall 3s linear forwards;
+  pointer-events:none;
+}
+
+@keyframes confettiFall{
+  to{
+    transform:translateY(100vh) rotate(720deg);
+    opacity:0;
+  }
+}
+
+/* TABLET */
+@media(max-width:768px){
+  :root{
+    --tile-size:280px;
+  }
+
+  h1{
+    font-size:36px;
+  }
+
+  .wrapper{
+    padding:30px 15px;
+  }
+
+  .secret{
+    padding:30px 25px;
+  }
+
+  .secret h2{
+    font-size:28px;
+  }
+
+  .secret p{
+    font-size:16px;
+  }
 }
 
 /* MOBILE */
 @media(max-width:500px){
+  :root{
+    --tile-size:min(85vw, 320px);
+  }
+
+  h1{
+    font-size:28px;
+    margin-bottom:8px;
+  }
+
+  .subtitle{
+    font-size:14px;
+    margin-bottom:25px;
+  }
+
+  .wrapper{
+    padding:20px 12px;
+  }
+
+  .top-nav{
+    padding:15px;
+    gap:12px;
+    justify-content:center;
+  }
+
+  .top-nav a{
+    padding:6px 12px;
+    font-size:14px;
+  }
+
+  .controls{
+    margin-bottom:20px;
+    gap:10px;
+  }
+
+  .controls button{
+    padding:10px 20px;
+    font-size:13px;
+  }
+
+  .timer{
+    font-size:16px;
+    min-width:70px;
+  }
+
   .puzzle-board{
-    width:260px;
-    height:260px;
+    gap:2px;
+    border-radius:12px;
+    margin-bottom:25px;
+  }
+
+  .secret{
+    padding:25px 20px;
+    margin-top:30px;
+    border-radius:16px;
+  }
+
+  .secret h2{
+    font-size:24px;
+    margin-bottom:12px;
+  }
+
+  .secret p{
+    font-size:15px;
+    line-height:1.7;
+  }
+
+  .next-btn{
+    padding:12px 28px;
+    font-size:14px;
+    margin-top:20px;
+  }
+}
+
+/* EXTRA SMALL SCREENS */
+@media(max-width:360px){
+  :root{
+    --tile-size:min(90vw, 280px);
+  }
+
+  h1{
+    font-size:24px;
+  }
+
+  .subtitle{
+    font-size:13px;
+  }
+
+  .controls button{
+    padding:8px 16px;
+    font-size:12px;
+  }
+
+  .timer{
+    font-size:14px;
   }
 }
 </style>
@@ -135,7 +390,14 @@ h1{
   <h1>Solve the Puzzle 🧩</h1>
   <p class="subtitle">Only then will the secret reveal</p>
 
-  <div class="puzzle-board" id="board"></div>
+  <div class="controls">
+    <button onclick="init()">New Puzzle</button>
+    <div class="timer" id="timer">00:00</div>
+  </div>
+
+  <div class="puzzle-container">
+    <div class="puzzle-board" id="board"></div>
+  </div>
 
   <!-- SECRET MESSAGE -->
   <div class="secret" id="secret">
@@ -144,7 +406,7 @@ h1{
       Every piece you just put together  
       reminds me of how perfectly  
       you fit into my life.  
-
+      <br><br>
       You are my favorite memory,  
       my safest place,  
       and my happiest thought.
@@ -159,14 +421,23 @@ h1{
 <script>
 const board = document.getElementById("board");
 const secret = document.getElementById("secret");
+const timerDisplay = document.getElementById("timer");
 const size = 3;
 let tiles = [];
 let empty = size*size - 1;
+let startTime;
+let timerInterval;
 
 function init(){
   tiles = [];
   board.innerHTML = "";
   secret.style.display="none";
+
+  // Reset timer
+  clearInterval(timerInterval);
+  startTime = Date.now();
+  updateTimer();
+  timerInterval = setInterval(updateTimer, 1000);
 
   for(let i=0;i<size*size;i++){
     const tile = document.createElement("div");
@@ -174,6 +445,7 @@ function init(){
     tile.dataset.index = i;
 
     if(i === empty){
+      tile.classList.add("empty");
       tile.style.background = "transparent";
     }else{
       const x = (i % size) * -100;
@@ -189,6 +461,13 @@ function init(){
   tiles.forEach(t=>board.appendChild(t));
 }
 
+function updateTimer(){
+  const elapsed = Math.floor((Date.now() - startTime) / 1000);
+  const mins = Math.floor(elapsed / 60);
+  const secs = elapsed % 60;
+  timerDisplay.textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
+}
+
 function shuffle(){
   for(let i=0;i<200;i++){
     const neighbors = getNeighbors(empty);
@@ -201,6 +480,13 @@ function shuffle(){
 function move(i){
   if(getNeighbors(empty).includes(i)){
     swap(i, empty);
+    
+    // Visual feedback
+    tiles[i].style.transform = "scale(0.95)";
+    setTimeout(()=>{
+      tiles[i].style.transform = "";
+    }, 150);
+    
     empty = i;
     checkWin();
   }
@@ -209,6 +495,10 @@ function move(i){
 function swap(a,b){
   [tiles[a].style.backgroundPosition, tiles[b].style.backgroundPosition] =
   [tiles[b].style.backgroundPosition, tiles[a].style.backgroundPosition];
+  
+  // Swap empty class
+  tiles[a].classList.toggle("empty");
+  tiles[b].classList.toggle("empty");
 }
 
 function getNeighbors(i){
@@ -229,7 +519,39 @@ function checkWin(){
     if(tiles[i].style.backgroundPosition !== `${correctX}px ${correctY}px`)
       return;
   }
-  secret.style.display="block";
+  
+  // Won!
+  clearInterval(timerInterval);
+  
+  // Animate tiles
+  tiles.forEach((tile,i)=>{
+    setTimeout(()=>{
+      tile.classList.add("win-animation");
+    }, i*50);
+  });
+  
+  // Show confetti
+  createConfetti();
+  
+  // Show secret message
+  setTimeout(()=>{
+    secret.style.display="block";
+  }, 800);
+}
+
+function createConfetti(){
+  const colors = ['#c97b84','#f4ece6','#6b5b53','#e8b4b8','#a16872'];
+  for(let i=0;i<50;i++){
+    setTimeout(()=>{
+      const confetti = document.createElement('div');
+      confetti.className = 'confetti';
+      confetti.style.left = Math.random()*100 + '%';
+      confetti.style.background = colors[Math.floor(Math.random()*colors.length)];
+      confetti.style.animationDelay = Math.random()*2 + 's';
+      document.body.appendChild(confetti);
+      setTimeout(()=>confetti.remove(), 3000);
+    }, i*30);
+  }
 }
 
 init();
