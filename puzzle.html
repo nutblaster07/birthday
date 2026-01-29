@@ -13,6 +13,7 @@
   --accent:#c97b84;
   --text:#6b5b53;
   --tile-size: 300px;
+  --card-size: 140px;
 }
 
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -23,6 +24,7 @@ body{
   color:var(--text);
   min-height:100vh;
   overflow-x:hidden;
+  touch-action: pan-y;
 }
 
 /* NAV */
@@ -111,70 +113,136 @@ h1{
   min-width:80px;
 }
 
-/* PUZZLE */
-.puzzle-container{
-  animation:slideDown 0.6s ease 0.3s backwards;
+/* HINT */
+.hint{
+  font-size:14px;
+  color:var(--accent);
+  margin-bottom:20px;
+  opacity:0.7;
+  animation:slideDown 0.6s ease 0.25s backwards;
 }
 
+.hint.mobile-hint{
+  display:none;
+}
+
+/* GAME CONTAINER */
+.game-container{
+  animation:slideDown 0.6s ease 0.3s backwards;
+  touch-action: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* PUZZLE BOARD */
 .puzzle-board{
   width:var(--tile-size);
   height:var(--tile-size);
-  margin:0 auto 30px;
+  margin:0 auto 20px;
   display:grid;
-  grid-template-columns:repeat(3,1fr);
-  grid-template-rows:repeat(3,1fr);
-  gap:3px;
+  grid-template-columns:repeat(2,1fr);
+  grid-template-rows:repeat(2,1fr);
+  gap:2px;
   border-radius:16px;
-  overflow:hidden;
-  box-shadow:0 15px 40px rgba(0,0,0,.2);
-  background:#fff;
+  padding:2px;
+  background:rgba(255,255,255,0.6);
+  backdrop-filter:blur(10px);
+  box-shadow:0 15px 40px rgba(0,0,0,.15);
   transition:all 0.3s ease;
 }
 
-.puzzle-board:hover{
-  box-shadow:0 18px 50px rgba(0,0,0,.25);
-}
-
-.tile{
-  background-image:url("puzzle.jpg"); /* 🔁 replace image */
-  background-size:var(--tile-size) var(--tile-size);
-  cursor:pointer;
-  transition:all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  position:relative;
-  border-radius:2px;
-}
-
-.tile:not(.empty):hover{
-  transform:scale(1.02);
-  box-shadow:0 4px 12px rgba(0,0,0,0.15);
-  z-index:10;
-}
-
-.tile:not(.empty):active{
-  transform:scale(0.98);
-}
-
-.tile.empty{
-  background:rgba(201,123,132,0.08) !important;
-  cursor:default;
+.board-slot{
+  background:rgba(201,123,132,0.1);
   border:2px dashed rgba(201,123,132,0.3);
+  border-radius:12px;
+  transition:all 0.3s ease;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:28px;
+  color:rgba(201,123,132,0.3);
+  font-weight:700;
 }
 
-/* WIN ANIMATION */
-@keyframes tilePop{
-  0%{transform:scale(1);}
-  50%{transform:scale(1.1) rotate(5deg);}
-  100%{transform:scale(1) rotate(0deg);}
+.board-slot.drag-over{
+  background:rgba(201,123,132,0.2);
+  border-color:var(--accent);
+  transform:scale(1.05);
 }
 
-.tile.win-animation{
-  animation:tilePop 0.5s ease;
+.board-slot.filled{
+  background:transparent;
+  border-color:transparent;
+}
+
+/* CARDS CONTAINER */
+.cards-container{
+  display:flex;
+  gap:15px;
+  justify-content:center;
+  flex-wrap:wrap;
+  margin-bottom:15px;
+  min-height:160px;
+}
+
+.puzzle-card{
+  width:var(--card-size);
+  height:var(--card-size);
+  background-size:200% 200%;
+  border-radius:12px;
+  cursor:grab;
+  box-shadow:0 8px 20px rgba(0,0,0,.2);
+  transition:all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position:relative;
+  touch-action:none;
+}
+
+.puzzle-card:hover{
+  transform:translateY(-5px) scale(1.05);
+  box-shadow:0 12px 30px rgba(201,123,132,0.4);
+}
+
+.puzzle-card:active,
+.puzzle-card.dragging{
+  cursor:grabbing;
+  transform:scale(1.1) rotate(5deg);
+  box-shadow:0 15px 35px rgba(201,123,132,0.5);
+  opacity:0.9;
+  z-index:1000;
+}
+
+.puzzle-card.placed{
+  position:absolute;
+  cursor:default;
+  box-shadow:0 4px 12px rgba(0,0,0,.15);
+}
+
+.puzzle-card.placed:hover{
+  transform:none;
+}
+
+/* SLOT LABELS */
+.slot-label{
+  position:absolute;
+  font-size:14px;
+  color:rgba(201,123,132,0.5);
+  font-weight:600;
+  top:50%;
+  left:50%;
+  transform:translate(-50%, -50%);
+  pointer-events:none;
+  transition:opacity 0.3s ease;
+}
+
+.board-slot.filled .slot-label{
+  opacity:0;
 }
 
 /* SECRET MESSAGE */
 .secret{
   display:none;
-  margin-top:40px;
+  margin-top:20px;
   background:#fff;
   padding:40px 30px;
   border-radius:20px;
@@ -232,13 +300,22 @@ h1{
   to{opacity:1; transform:translateY(0);}
 }
 
+@keyframes cardPop{
+  0%{transform:scale(1);}
+  50%{transform:scale(1.15) rotate(5deg);}
+  100%{transform:scale(1) rotate(0deg);}
+}
+
+.puzzle-card.win-animation{
+  animation:cardPop 0.5s ease;
+}
+
 /* CONFETTI */
 .confetti{
   position:fixed;
   width:10px;
   height:10px;
   background:var(--accent);
-  position:absolute;
   animation:confettiFall 3s linear forwards;
   pointer-events:none;
 }
@@ -254,6 +331,7 @@ h1{
 @media(max-width:768px){
   :root{
     --tile-size:280px;
+    --card-size:130px;
   }
 
   h1{
@@ -275,12 +353,21 @@ h1{
   .secret p{
     font-size:16px;
   }
+
+  .hint.desktop-hint{
+    display:none;
+  }
+
+  .hint.mobile-hint{
+    display:block;
+  }
 }
 
 /* MOBILE */
 @media(max-width:500px){
   :root{
-    --tile-size:min(85vw, 320px);
+    --tile-size:min(82vw, 300px);
+    --card-size:min(38vw, 140px);
   }
 
   h1{
@@ -323,15 +410,34 @@ h1{
     min-width:70px;
   }
 
+  .hint{
+    font-size:13px;
+    margin-bottom:15px;
+  }
+
   .puzzle-board{
     gap:2px;
+    padding:2px;
     border-radius:12px;
-    margin-bottom:25px;
+    margin-bottom:15px;
+  }
+
+  .cards-container{
+    gap:12px;
+    min-height:150px;
+  }
+
+  .board-slot{
+    font-size:20px;
+  }
+
+  .slot-label{
+    font-size:12px;
   }
 
   .secret{
     padding:25px 20px;
-    margin-top:30px;
+    margin-top:20px;
     border-radius:16px;
   }
 
@@ -355,7 +461,8 @@ h1{
 /* EXTRA SMALL SCREENS */
 @media(max-width:360px){
   :root{
-    --tile-size:min(90vw, 280px);
+    --tile-size:min(85vw, 260px);
+    --card-size:min(40vw, 120px);
   }
 
   h1{
@@ -374,6 +481,19 @@ h1{
   .timer{
     font-size:14px;
   }
+
+  .hint{
+    font-size:12px;
+  }
+
+  .puzzle-board{
+    gap:2px;
+    padding:2px;
+  }
+
+  .cards-container{
+    gap:10px;
+  }
 }
 </style>
 </head>
@@ -388,28 +508,42 @@ h1{
 
 <div class="wrapper">
   <h1>Solve the Puzzle 🧩</h1>
-  <p class="subtitle">Only then will the secret reveal</p>
+  <p class="subtitle">Drag the cards to their correct positions</p>
 
   <div class="controls">
     <button onclick="init()">New Puzzle</button>
     <div class="timer" id="timer">00:00</div>
   </div>
 
-  <div class="puzzle-container">
-    <div class="puzzle-board" id="board"></div>
+  <p class="hint desktop-hint">🖱️ Drag and drop cards onto the board</p>
+  <p class="hint mobile-hint">👆 Touch and drag cards to place them</p>
+
+  <div class="game-container">
+    <!-- PUZZLE BOARD -->
+    <div class="puzzle-board" id="board">
+      <div class="board-slot" data-position="0">
+        <span class="slot-label">1</span>
+      </div>
+      <div class="board-slot" data-position="1">
+        <span class="slot-label">2</span>
+      </div>
+      <div class="board-slot" data-position="2">
+        <span class="slot-label">3</span>
+      </div>
+      <div class="board-slot" data-position="3">
+        <span class="slot-label">4</span>
+      </div>
+    </div>
+
+    <!-- CARDS CONTAINER -->
+    <div class="cards-container" id="cardsContainer"></div>
   </div>
 
   <!-- SECRET MESSAGE -->
   <div class="secret" id="secret">
-    <h2>For You 💖</h2>
+    <h2>To My Best Friend 💛</h2>
     <p>
-      Every piece you just put together  
-      reminds me of how perfectly  
-      you fit into my life.  
-      <br><br>
-      You are my favorite memory,  
-      my safest place,  
-      and my happiest thought.
+      Every piece you just put together reminds me of all the memories we've built. You're not just my friend, you're my chosen family, my partner in chaos, and the one who gets me like no one else.
     </p>
 
     <a href="surprise.html" class="next-btn">
@@ -420,18 +554,62 @@ h1{
 
 <script>
 const board = document.getElementById("board");
+const cardsContainer = document.getElementById("cardsContainer");
 const secret = document.getElementById("secret");
 const timerDisplay = document.getElementById("timer");
-const size = 3;
-let tiles = [];
-let empty = size*size - 1;
+const boardSlots = document.querySelectorAll('.board-slot');
+
+let cards = [];
 let startTime;
 let timerInterval;
+let draggedCard = null;
+let touchOffset = {x: 0, y: 0};
+
+// Array of puzzle images
+const puzzleImages = [
+  'puzzle1.jpg',
+  'puzzle2.jpg',
+  'puzzle3.jpg',
+  'puzzle4.jpg'
+];
+
+// Array of messages for best friends - one for each puzzle
+const puzzleMessages = [
+  {
+    title: "To My Best Friend 💛",
+    text: "Every piece you just put together reminds me of all the memories we've built. You're not just my friend, you're my chosen family, my partner in chaos, and the one who gets me like no one else."
+  },
+  {
+    title: "Forever Grateful 🌟",
+    text: "Just like this puzzle, our friendship fits together perfectly. Through every laugh, every adventure, and every random 2 AM conversation, you've been there. Thank you for being the amazing friend you are."
+  },
+  {
+    title: "Best Friends Forever 💫",
+    text: "Each piece of this puzzle represents a moment we've shared. From silly jokes to deep talks, from crazy adventures to quiet comfort - you make every day better just by being you."
+  },
+  {
+    title: "You're One in a Million 🎉",
+    text: "Solving this puzzle was easy compared to finding a friend like you! You're the person who makes me laugh until I cry, who supports my wildest dreams, and who knows all my secrets. Lucky doesn't even cover it."
+  }
+];
+
+let currentPuzzleImage = '';
+let currentPuzzleIndex = 0;
 
 function init(){
-  tiles = [];
-  board.innerHTML = "";
-  secret.style.display="none";
+  cardsContainer.innerHTML = "";
+  secret.style.display = "none";
+  cards = [];
+  
+  // Select random puzzle image and store its index
+  currentPuzzleIndex = Math.floor(Math.random() * puzzleImages.length);
+  currentPuzzleImage = puzzleImages[currentPuzzleIndex];
+  
+  // Clear all slots
+  boardSlots.forEach(slot => {
+    slot.classList.remove('filled');
+    slot.innerHTML = '<span class="slot-label">' + (parseInt(slot.dataset.position) + 1) + '</span>';
+  });
 
   // Reset timer
   clearInterval(timerInterval);
@@ -439,26 +617,44 @@ function init(){
   updateTimer();
   timerInterval = setInterval(updateTimer, 1000);
 
-  for(let i=0;i<size*size;i++){
-    const tile = document.createElement("div");
-    tile.className = "tile";
-    tile.dataset.index = i;
+  // Create shuffled cards
+  let indices = [0, 1, 2, 3];
+  indices = indices.sort(() => Math.random() - 0.5);
 
-    if(i === empty){
-      tile.classList.add("empty");
-      tile.style.background = "transparent";
-    }else{
-      const x = (i % size) * -100;
-      const y = Math.floor(i / size) * -100;
-      tile.style.backgroundPosition = `${x}px ${y}px`;
-    }
+  indices.forEach((posIndex, i) => {
+    const card = document.createElement("div");
+    card.className = "puzzle-card";
+    card.dataset.correctPosition = posIndex;
+    card.dataset.cardId = i;
+    
+    // Set the random puzzle image as background
+    card.style.backgroundImage = `url('${currentPuzzleImage}')`;
+    
+    // Position 0: top-left (0% 0%)
+    // Position 1: top-right (100% 0%)
+    // Position 2: bottom-left (0% 100%)
+    // Position 3: bottom-right (100% 100%)
+    const bgPositions = ['0% 0%', '100% 0%', '0% 100%', '100% 100%'];
+    card.style.backgroundPosition = bgPositions[posIndex];
 
-    tile.addEventListener("click",()=>move(i));
-    tiles.push(tile);
-  }
+    // Mouse events
+    card.addEventListener('mousedown', handleMouseDown);
+    
+    // Touch events
+    card.addEventListener('touchstart', handleTouchStart, {passive: false});
+    card.addEventListener('touchmove', handleTouchMove, {passive: false});
+    card.addEventListener('touchend', handleTouchEnd, {passive: false});
 
-  shuffle();
-  tiles.forEach(t=>board.appendChild(t));
+    cards.push(card);
+    cardsContainer.appendChild(card);
+  });
+
+  // Setup drop zones
+  boardSlots.forEach(slot => {
+    slot.addEventListener('dragover', handleDragOver);
+    slot.addEventListener('drop', handleDrop);
+    slot.addEventListener('dragleave', handleDragLeave);
+  });
 }
 
 function updateTimer(){
@@ -468,88 +664,207 @@ function updateTimer(){
   timerDisplay.textContent = `${String(mins).padStart(2,'0')}:${String(secs).padStart(2,'0')}`;
 }
 
-function shuffle(){
-  for(let i=0;i<200;i++){
-    const neighbors = getNeighbors(empty);
-    const rand = neighbors[Math.floor(Math.random()*neighbors.length)];
-    swap(rand, empty);
-    empty = rand;
-  }
-}
-
-function move(i){
-  if(getNeighbors(empty).includes(i)){
-    swap(i, empty);
-    
-    // Visual feedback
-    tiles[i].style.transform = "scale(0.95)";
-    setTimeout(()=>{
-      tiles[i].style.transform = "";
-    }, 150);
-    
-    empty = i;
-    checkWin();
-  }
-}
-
-function swap(a,b){
-  [tiles[a].style.backgroundPosition, tiles[b].style.backgroundPosition] =
-  [tiles[b].style.backgroundPosition, tiles[a].style.backgroundPosition];
+// MOUSE DRAG
+function handleMouseDown(e){
+  draggedCard = e.target;
+  draggedCard.classList.add('dragging');
+  draggedCard.draggable = true;
   
-  // Swap empty class
-  tiles[a].classList.toggle("empty");
-  tiles[b].classList.toggle("empty");
+  draggedCard.addEventListener('dragstart', (e) => {
+    e.dataTransfer.effectAllowed = 'move';
+  });
+  
+  draggedCard.addEventListener('dragend', () => {
+    draggedCard.classList.remove('dragging');
+    draggedCard.draggable = false;
+  });
 }
 
-function getNeighbors(i){
-  const n=[];
-  const r=Math.floor(i/size), c=i%size;
-  if(r>0) n.push(i-size);
-  if(r<size-1) n.push(i+size);
-  if(c>0) n.push(i-1);
-  if(c<size-1) n.push(i+1);
-  return n;
+function handleDragOver(e){
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  e.currentTarget.classList.add('drag-over');
+}
+
+function handleDragLeave(e){
+  e.currentTarget.classList.remove('drag-over');
+}
+
+function handleDrop(e){
+  e.preventDefault();
+  const slot = e.currentTarget;
+  slot.classList.remove('drag-over');
+  
+  if(draggedCard && !slot.classList.contains('filled')){
+    placeCard(draggedCard, slot);
+  }
+}
+
+// TOUCH DRAG
+function handleTouchStart(e){
+  e.preventDefault();
+  draggedCard = e.currentTarget;
+  draggedCard.classList.add('dragging');
+  
+  const touch = e.touches[0];
+  const rect = draggedCard.getBoundingClientRect();
+  
+  touchOffset.x = touch.clientX - rect.left;
+  touchOffset.y = touch.clientY - rect.top;
+  
+  // Make card follow finger
+  draggedCard.style.position = 'fixed';
+  draggedCard.style.zIndex = '1000';
+  updateCardPosition(touch.clientX, touch.clientY);
+}
+
+function handleTouchMove(e){
+  e.preventDefault();
+  if(!draggedCard) return;
+  
+  const touch = e.touches[0];
+  updateCardPosition(touch.clientX, touch.clientY);
+  
+  // Check which slot we're over
+  boardSlots.forEach(slot => {
+    const rect = slot.getBoundingClientRect();
+    if(
+      touch.clientX >= rect.left &&
+      touch.clientX <= rect.right &&
+      touch.clientY >= rect.top &&
+      touch.clientY <= rect.bottom
+    ){
+      slot.classList.add('drag-over');
+    } else {
+      slot.classList.remove('drag-over');
+    }
+  });
+}
+
+function handleTouchEnd(e){
+  e.preventDefault();
+  if(!draggedCard) return;
+  
+  const touch = e.changedTouches[0];
+  let targetSlot = null;
+  
+  // Find which slot we dropped on
+  boardSlots.forEach(slot => {
+    const rect = slot.getBoundingClientRect();
+    if(
+      touch.clientX >= rect.left &&
+      touch.clientX <= rect.right &&
+      touch.clientY >= rect.top &&
+      touch.clientY <= rect.bottom
+    ){
+      targetSlot = slot;
+    }
+    slot.classList.remove('drag-over');
+  });
+  
+  if(targetSlot && !targetSlot.classList.contains('filled')){
+    placeCard(draggedCard, targetSlot);
+  } else {
+    // Return to cards container
+    draggedCard.style.position = 'relative';
+    draggedCard.style.left = '0';
+    draggedCard.style.top = '0';
+    draggedCard.classList.remove('dragging');
+  }
+  
+  draggedCard = null;
+}
+
+function updateCardPosition(x, y){
+  draggedCard.style.left = (x - touchOffset.x) + 'px';
+  draggedCard.style.top = (y - touchOffset.y) + 'px';
+}
+
+function placeCard(card, slot){
+  const slotPosition = parseInt(slot.dataset.position);
+  const correctPosition = parseInt(card.dataset.correctPosition);
+  
+  // Remove from cards container
+  card.classList.remove('dragging');
+  card.style.position = 'absolute';
+  card.style.left = '0';
+  card.style.top = '0';
+  card.style.width = '100%';
+  card.style.height = '100%';
+  card.style.borderRadius = '10px';
+  
+  // Clear slot and add card
+  slot.innerHTML = '';
+  slot.appendChild(card);
+  slot.classList.add('filled');
+  card.classList.add('placed');
+  
+  // Store placement info
+  slot.dataset.cardPosition = correctPosition;
+  
+  // Remove drag listeners
+  card.removeEventListener('mousedown', handleMouseDown);
+  card.removeEventListener('touchstart', handleTouchStart);
+  
+  // Check win
+  checkWin();
 }
 
 function checkWin(){
-  for(let i=0;i<tiles.length;i++){
-    if(i===empty) continue;
-    const correctX=(i%size)*-100;
-    const correctY=Math.floor(i/size)*-100;
-    if(tiles[i].style.backgroundPosition !== `${correctX}px ${correctY}px`)
+  let allCorrect = true;
+  
+  boardSlots.forEach(slot => {
+    if(!slot.classList.contains('filled')){
+      allCorrect = false;
       return;
-  }
-  
-  // Won!
-  clearInterval(timerInterval);
-  
-  // Animate tiles
-  tiles.forEach((tile,i)=>{
-    setTimeout(()=>{
-      tile.classList.add("win-animation");
-    }, i*50);
+    }
+    
+    const slotPosition = parseInt(slot.dataset.position);
+    const cardPosition = parseInt(slot.dataset.cardPosition);
+    
+    if(slotPosition !== cardPosition){
+      allCorrect = false;
+    }
   });
   
-  // Show confetti
-  createConfetti();
-  
-  // Show secret message
-  setTimeout(()=>{
-    secret.style.display="block";
-  }, 800);
+  if(allCorrect){
+    // Won!
+    clearInterval(timerInterval);
+    
+    // Update the secret message with the matching puzzle message
+    const message = puzzleMessages[currentPuzzleIndex];
+    document.querySelector('.secret h2').textContent = message.title;
+    document.querySelector('.secret p').innerHTML = message.text;
+    
+    // Animate cards
+    boardSlots.forEach((slot, i) => {
+      setTimeout(() => {
+        const card = slot.querySelector('.puzzle-card');
+        if(card) card.classList.add('win-animation');
+      }, i * 100);
+    });
+    
+    // Show confetti
+    createConfetti();
+    
+    // Show secret
+    setTimeout(() => {
+      secret.style.display = "block";
+    }, 800);
+  }
 }
 
 function createConfetti(){
   const colors = ['#c97b84','#f4ece6','#6b5b53','#e8b4b8','#a16872'];
   for(let i=0;i<50;i++){
-    setTimeout(()=>{
+    setTimeout(() => {
       const confetti = document.createElement('div');
       confetti.className = 'confetti';
       confetti.style.left = Math.random()*100 + '%';
       confetti.style.background = colors[Math.floor(Math.random()*colors.length)];
       confetti.style.animationDelay = Math.random()*2 + 's';
       document.body.appendChild(confetti);
-      setTimeout(()=>confetti.remove(), 3000);
+      setTimeout(() => confetti.remove(), 3000);
     }, i*30);
   }
 }
