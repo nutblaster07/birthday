@@ -11,7 +11,7 @@
   <style>
     :root {
       --bg-image: url("b.png");   
-      --bg-image-mobile: url("b-mobile.png"); 
+      --bg-image-mobile: url("b-mobile.png"); /* ADD YOUR MOBILE BACKGROUND IMAGE HERE */
       --accent: #c97b84;
     }
 
@@ -244,7 +244,11 @@
     }
 
     @media (max-width: 768px) {
-   
+      /* ============================================
+         MOBILE BACKGROUND IMAGE SECTION
+         Change --bg-image-mobile at the top of the CSS
+         to use a different image on tablets/mobile
+         ============================================ */
       body {
         background:
           linear-gradient(rgba(0,0,0,.35), rgba(0,0,0,.35)),
@@ -278,7 +282,10 @@
     }
 
     @media (max-width: 480px) {
-     
+      /* ============================================
+         MOBILE BACKGROUND IMAGE SECTION (SMALL PHONES)
+         This also uses --bg-image-mobile
+         ============================================ */
       body { 
         padding: 10px;
         background:
