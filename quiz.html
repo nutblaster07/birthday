@@ -1,304 +1,293 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Just for Fun</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Birthday Quiz</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@1&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@1&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
-:root{
-  --bg:#f4ece6;
+:root {
   --accent:#c97b84;
-  --text:#6b5b53;
-  --card:#fff;
+  --correct:#4caf50;
+  --wrong:#f44336;
 }
 
-*{margin:0;padding:0;box-sizing:border-box;}
+* { margin:0; padding:0; box-sizing:border-box; }
 
-body{
-  font-family:"Poppins",sans-serif;
-  background:var(--bg);
-  color:var(--text);
-}
-
-/* NAVBAR */
-.top-nav{
-  display:flex;
-  justify-content:flex-end;
-  gap:25px;
-  padding:25px 40px;
-  font-weight:600;
-}
-.top-nav a{
-  text-decoration:none;
-  color:#8a7b74;
-  padding:6px 12px;
-  border-radius:6px;
-}
-.top-nav a:hover{
-  background:rgba(201,123,132,.15);
-  color:#c97b84;
+body {
+  font-family:Poppins, sans-serif;
+  min-height:100vh;
+  background:
+    linear-gradient(rgba(0,0,0,.4), rgba(0,0,0,.4)),
+    url("quiz.png") center/cover fixed;
+  padding:20px;
 }
 
-/* PAGE */
-.wrapper{
-  max-width:1000px;
-  margin:auto;
-  padding:30px 20px 80px;
+.container {
+  max-width:800px;
+  margin:80px auto;
 }
 
-h1{
-  font-family:"Playfair Display",serif;
+.title {
+  font-family:"Playfair Display", serif;
+  font-size:46px;
+  color:#fff;
   text-align:center;
-  font-size:44px;
-  margin-bottom:40px;
-  color:#7a6760;
 }
 
-/* SECTIONS */
-.section{
-  background:var(--card);
-  border-radius:18px;
-  padding:30px 25px;
-  margin-bottom:40px;
-  box-shadow:0 10px 25px rgba(0,0,0,.08);
+.subtitle {
+  text-align:center;
+  color:#eee;
+  margin-bottom:30px;
 }
 
-.section h2{
+.quiz-container {
+  background:rgba(255,255,255,.95);
+  padding:40px;
+  border-radius:20px;
+}
+
+.question-card {
+  margin-bottom:30px;
+  padding-bottom:20px;
+  border-bottom:2px solid rgba(201,123,132,.2);
+}
+
+.question-text {
+  font-size:20px;
+  font-weight:600;
   margin-bottom:15px;
-  color:#7a6760;
 }
 
-/* QUIZ */
-.quiz label{
+.option {
   display:block;
-  margin:10px 0;
+  padding:14px 18px;
+  border-radius:12px;
+  background:#f5f5f5;
+  margin-bottom:10px;
   cursor:pointer;
+  transition:.3s;
 }
 
-.quiz button{
-  margin-top:15px;
-  padding:10px 25px;
-  border:none;
-  border-radius:30px;
+.option:hover { border:2px solid var(--accent); }
+
+.option input { display:none; }
+
+.option.selected { border:2px solid var(--accent); }
+.option.correct { border:2px solid var(--correct); color:var(--correct); }
+.option.wrong { border:2px solid var(--wrong); color:var(--wrong); }
+.option.disabled { pointer-events:none; opacity:.6; }
+
+.submit-button {
+  width:100%;
+  padding:18px;
+  font-size:18px;
   background:var(--accent);
-  color:#fff;
-  font-weight:600;
-  cursor:pointer;
-}
-
-/* MEMORY GAME */
-.game-board{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:12px;
-  margin-top:15px;
-}
-
-.card{
-  background:#c97b84;
-  border-radius:10px;
-  height:80px;
-  cursor:pointer;
-  position:relative;
-  transform-style:preserve-3d;
-  transition:.4s;
-}
-
-.card.flipped{
-  transform:rotateY(180deg);
-}
-
-.card-front, .card-back{
-  position:absolute;
-  inset:0;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  border-radius:10px;
-  backface-visibility:hidden;
-}
-
-.card-front{
-  background:#c97b84;
-  color:#fff;
-  font-size:24px;
-}
-
-.card-back{
-  background:#fff;
-  transform:rotateY(180deg);
-  font-size:20px;
-}
-
-/* COMPLIMENT */
-.compliment-box{
-  text-align:center;
-}
-
-.compliment{
-  margin-top:15px;
-  font-size:20px;
-  color:#c97b84;
-  min-height:40px;
-}
-
-.compliment-box button{
-  padding:12px 30px;
-  background:#c97b84;
-  color:#fff;
   border:none;
-  border-radius:30px;
-  font-weight:600;
+  color:#fff;
+  border-radius:12px;
   cursor:pointer;
 }
 
-/* RESPONSIVE */
-@media(max-width:700px){
-  .game-board{grid-template-columns:repeat(3,1fr);}
+.results {
+  display:none;
+  text-align:center;
+  margin-top:40px;
+  padding:30px;
+  border-radius:15px;
+  background:rgba(201,123,132,.1);
 }
-@media(max-width:480px){
-  .game-board{grid-template-columns:repeat(2,1fr);}
-  h1{font-size:30px;}
+
+.results.show { display:block; }
+
+.score {
+  font-size:60px;
+  color:var(--accent);
 }
+
+.retry-button {
+  margin-top:20px;
+  padding:12px 28px;
+  border-radius:25px;
+  background:#fff;
+  border:2px solid var(--accent);
+  color:var(--accent);
+  cursor:pointer;
+}
+
+#trickySection { display:none; }
+#trickySection.show { display:block; }
 </style>
 </head>
 
 <body>
 
-<div class="top-nav">
-  <a href="index.html">Home</a>
-  <a href="memories.html">Memories</a>
-  <a href="messages.html">Messages</a>
-  <a href="music.html">Music</a>
-  <a href="fun.html">Fun</a>
-  <a href="surprise.html">Surprise</a>
+<div class="container">
+  <h1 class="title">How Well Do You Know Me?</h1>
+  <p class="subtitle">Let’s test you 😏</p>
+
+  <div class="quiz-container">  
+    <div class="question-card"> 
+    <span class="question-number">Question 1</span> 
+    <div class="question-text">What's my spirit animal?</div> 
+    <div class="options"> <label class="option"> 
+      <input type="radio" name="q1" value="A"> <span>A) A lazy cat that sleeps 20 hours a day</span> </label> 
+      <label class="option"> <input type="radio" name="q1" value="B"> <span>B) A chaotic raccoon digging through trash at 3 AM</span> </label> 
+      <label class="option"> <input type="radio" name="q1" value="C"> <span>C) An energetic golden retriever on 5 cups of coffee</span> </label> 
+      <label class="option"> <input type="radio" name="q1" value="D"> <span>D) A wise owl who still makes dumb decisions</span> </label> </div> 
+    </div>  
+    <div class="question-card"> 
+      <span class="question-number">Question 2</span> 
+      <div class="question-text">What's my toxic trait?</div> 
+      <div class="options"> <label class="option"> 
+      <input type="radio" name="q2" value="A"> <span>A) I'll say "I'm fine" when I'm clearly NOT fine</span> </label> 
+      <label class="option"> <input type="radio" name="q2" value="B"> <span>B) I buy things I don't need because they're on sale</span> </label> 
+      <label class="option"> <input type="radio" name="q2" value="C"> <span>C) I have 47 unread messages and I'm ignoring all of them</span> </label> 
+      <label class="option"> <input type="radio" name="q2" value="D"> <span>D) I start new hobbies and quit after 2 days</span> </label> 
+    </div> 
+  </div> 
+  <div class="question-card"> 
+    <span class="question-number">Question 3</span> 
+    <div class="question-text">What's the dumbest thing we've ever done together?</div> 
+    <div class="options"> <label class="option"> 
+    <input type="radio" name="q3" value="A"> <span>A) That time we talked for 9 hours</span> </label> 
+    <label class="option"> 
+    <input type="radio" name="q3" value="B"> <span>B) When I start talking about makeups</span> </label> 
+    <label class="option"> 
+    <input type="radio" name="q3" value="C"> <span>C) When I asked you about upper lips</span> </label> 
+    <label class="option"> 
+    <input type="radio" name="q3" value="D"> <span>D) When I order unnecessary items</span> </label> 
+  </div> 
+</div>  
+  <div class="question-card"> 
+    <span class="question-number">Question 4</span> 
+    <div class="question-text">What do I always say?</div> 
+    <div class="options"> <label class="option"> 
+    <input type="radio" name="q4" value="A"> <span>A) "I'm tired"</span> </label> 
+    <label class="option"> 
+    <input type="radio" name="q4" value="B"> <span>B) "I'll do it later"</span> </label> 
+    <label class="option"> <input type="radio" name="q4" value="C"> <span>C) "I'm not dramatic!" *proceeds to be dramatic*</span> </label> 
+    <label class="option"> <input type="radio" name="q4" value="D"> <span>D) "Just five more minutes"</span> </label> 
+  </div> 
+</div>  
+<div class="question-card"> 
+  <span class="question-number">Question 5</span> 
+  <div class="question-text">What's my go-to excuse for everything?</div> 
+  <div class="options"> <label class="option"> <input type="radio" name="q5" value="A"> <span>A) "I forgot"</span> </label> 
+  <label class="option"> <input type="radio" name="q5" value="B"> <span>B) "I was sleeping"</span> </label> 
+  <label class="option"> <input type="radio" name="q5" value="C"> <span>C) "My phone died"</span> </label> 
+  <label class="option"> <input type="radio" name="q5" value="D"> <span>D) "I'm busy"</span> </label> 
+</div> 
 </div>
 
-<div class="wrapper">
-<h1>Just for Fun</h1>
+    <button class="submit-button" id="submitBtn">Submit Quiz</button>
 
-<!-- QUIZ -->
-<div class="section quiz">
-  <h2>How well do you know me?</h2>
+    
+    <div class="results" id="results">
+      <div class="score" id="scoreText">0/5</div>
+      <p id="ratingMessage">You completed the quiz 😏</p>
+      <button class="retry-button" id="retryBtn">Try Again</button>
+    </div>
 
-  <p>What is my favorite way to spend a day?</p>
-  <label><input type="radio" name="q1" value="a"> Watching movies</label>
-  <label><input type="radio" name="q1" value="b"> Going on long walks</label>
-  <label><input type="radio" name="q1" value="c"> Sleeping all day</label>
+    
+    <div class="results" id="trickySection">
+      <h2 id="trickyQuestion">Do you want me to irritate you always?</h2>
 
-  <button onclick="checkQuiz()">Check Answer</button>
-  <p id="quizResult"></p>
-</div>
+      <div style="margin-top:25px; position:relative; height:120px;">
+        <button class="retry-button" id="yesBtn">Yes 😌</button>
+        <button class="retry-button" id="noBtn" style="position:absolute;">No 😒</button>
+      </div>
 
-<!-- MEMORY GAME -->
-<div class="section">
-  <h2>Memory Game</h2>
-  <p>Find the matching hearts 💖</p>
+      <p id="trickyMessage"></p>
+    </div>
 
-  <div class="game-board" id="gameBoard"></div>
-  <p id="gameStatus"></p>
-</div>
-
-<!-- COMPLIMENT GENERATOR -->
-<div class="section compliment-box">
-  <h2>Fortune of the Day ✨</h2>
-  <button onclick="showCompliment()">Click for a compliment</button>
-  <div class="compliment" id="complimentText"></div>
-</div>
-
+  </div>
 </div>
 
 <script>
-/* ---------- QUIZ ---------- */
-function checkQuiz(){
-  const answer = document.querySelector('input[name="q1"]:checked');
-  const result = document.getElementById("quizResult");
 
-  if(!answer){
-    result.textContent = "Pick an answer first 😊";
-    return;
-  }
+const answers = { q1:"D", q2:"B", q3:"B", q4:"C", q5:"A" };
 
-  if(answer.value === "b"){
-    result.textContent = "Correct! You know me well 💖";
-  }else{
-    result.textContent = "Haha close! But I still love you 😄";
-  }
-}
-
-/* ---------- MEMORY GAME ---------- */
-const symbols = ["💖","🌸","✨","😊","💖","🌸","✨","😊"];
-let shuffled = symbols.sort(()=>0.5 - Math.random());
-
-const board = document.getElementById("gameBoard");
-let first = null, second = null, lock = false;
-let matched = 0;
-
-shuffled.forEach(sym=>{
-  const card = document.createElement("div");
-  card.className = "card";
-
-  card.innerHTML = `
-    <div class="card-front">?</div>
-    <div class="card-back">${sym}</div>
-  `;
-
-  card.addEventListener("click",()=>{
-    if(lock || card === first || card.classList.contains("flipped")) return;
-
-    card.classList.add("flipped");
-
-    if(!first){
-      first = card;
-    }else{
-      second = card;
-      lock = true;
-
-      if(first.querySelector(".card-back").textContent ===
-         second.querySelector(".card-back").textContent){
-
-        matched += 2;
-        first = second = null;
-        lock = false;
-
-        if(matched === symbols.length){
-          document.getElementById("gameStatus").textContent =
-            "You matched all of them! 🎉";
-        }
-      }else{
-        setTimeout(()=>{
-          first.classList.remove("flipped");
-          second.classList.remove("flipped");
-          first = second = null;
-          lock = false;
-        },800);
-      }
-    }
+document.querySelectorAll(".option").forEach(option=>{
+  option.addEventListener("click",()=>{
+    document.querySelectorAll(`input[name="${option.firstChild.name}"]`)
+      .forEach(i=>i.parentElement.classList.remove("selected"));
+    option.classList.add("selected");
+    option.firstChild.checked = true;
   });
-
-  board.appendChild(card);
 });
 
-/* ---------- COMPLIMENT GENERATOR ---------- */
-const compliments = [
-  "You make every place brighter ✨",
-  "Your smile can change any bad day 💖",
-  "You are someone truly special 🌸",
-  "The world feels kinder with you in it 😊",
-  "You are beautiful inside and out 💕",
-  "You bring happiness wherever you go 🌈"
+document.getElementById("submitBtn").addEventListener("click",()=>{
+  let score = 0;
+  for(let q in answers){
+    const sel = document.querySelector(`input[name="${q}"]:checked`);
+    if(!sel){ alert("Please answer all questions"); return; }
+    if(sel.value === answers[q]) score++;
+  }
+  document.getElementById("scoreText").textContent = `${score}/5`;
+  document.getElementById("results").classList.add("show");
+  document.getElementById("trickySection").classList.add("show");
+});
+
+
+const tricky = [
+  { q:"Do you want me to irritate you always?", a:"I knew it! I will irritate you more 😈" },
+  { q:"Will you always listen to my makeup stories?", a:"Perfect! 2-hour makeup tutorials incoming 💄✨" },
+  { q:"Am I the best person you've ever met?", a:"Obviously! I'm amazing and you know it 🌟👑" }
 ];
 
-function showCompliment(){
-  const text = compliments[Math.floor(Math.random()*compliments.length)];
-  document.getElementById("complimentText").textContent = text;
+let ti = 0;
+const tq = document.getElementById("trickyQuestion");
+const tm = document.getElementById("trickyMessage");
+const noBtn = document.getElementById("noBtn");
+
+function escapeNo(){
+  const box = noBtn.parentElement;
+  const x = Math.random() * (box.clientWidth - noBtn.offsetWidth);
+  const y = Math.random() * (box.clientHeight - noBtn.offsetHeight);
+  noBtn.style.left = x + "px";
+  noBtn.style.top = y + "px";
 }
+
+noBtn.addEventListener("mouseenter", escapeNo);
+noBtn.addEventListener("click", escapeNo);
+noBtn.addEventListener("touchstart", escapeNo);
+
+document.getElementById("yesBtn").addEventListener("click",()=>{
+  tm.textContent = tricky[ti].a;
+  ti++;
+  if(ti < tricky.length){
+    setTimeout(()=>{
+      tq.textContent = tricky[ti].q;
+      tm.textContent = "";
+      escapeNo();
+    },1200);
+  } else {
+    setTimeout(()=>{
+      tq.textContent = "Okay okay 😌";
+      tm.textContent = "You passed the ultimate test. Happy Birthday to me! 🎉💖";
+      document.getElementById("yesBtn").style.display="none";
+      noBtn.style.display="none";
+    },1200);
+  }
+});
+
+
+document.getElementById("retryBtn").addEventListener("click",()=>{
+  document.querySelectorAll("input").forEach(i=>i.checked=false);
+  document.querySelectorAll(".option").forEach(o=>o.classList.remove("selected"));
+  document.getElementById("results").classList.remove("show");
+  document.getElementById("trickySection").classList.remove("show");
+  document.getElementById("yesBtn").style.display="inline-block";
+  noBtn.style.display="inline-block";
+  tq.textContent = tricky[0].q;
+  tm.textContent = "";
+  ti = 0;
+  window.scrollTo({top:0,behavior:"smooth"});
+});
 </script>
 
 </body>
 </html>
->>>>>>> 6958646f5ad649c27b64bf9f15e33ed4d2514c8c
