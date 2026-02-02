@@ -119,6 +119,41 @@ body {
 
 #trickySection { display:none; }
 #trickySection.show { display:block; }
+
+.next-btn-wrap {
+  margin-top: 40px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.next-btn {
+  padding: 14px 30px;
+  border-radius: 30px;
+  background: #c97b84;
+  color: #fff;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.3s;
+}
+
+.next-btn:hover {
+  background: #b86b74;
+  transform: translateY(-2px);
+}
+
+.secondary-btn {
+  background: transparent;
+  color: #c97b84;
+  border: 2px solid #c97b84;
+}
+
+.secondary-btn:hover {
+  background: #c97b84;
+  color: #fff;
+}
+
 </style>
 </head>
 
@@ -205,6 +240,11 @@ body {
 
   </div>
 </div>
+<div class="next-btn-wrap">
+  <a href="puzzle.html" class="next-btn">Ready for the next surprise? →</a>
+  
+</div>
+
 
 <script>
 
