@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Leave a Message 💖</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital@1&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fbeaec, #fff);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.container {
+  max-width: 500px;
+  width: 100%;
+  background: #fff;
+  border-radius: 20px;
+  padding: 35px;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+  text-align: center;
+}
+
+h1 {
+  font-family: "Playfair Display", serif;
+  color: #c97b84;
+  font-size: 38px;
+  margin-bottom: 10px;
+  line-height: 1.2;
+}
+
+.subtitle {
+  color: #666;
+  margin-bottom: 25px;
+  font-size: 16px;
+}
+
+form {
+  width: 100%;
+}
+
+textarea {
+  width: 100%;
+  max-width: 100%;
+  height: 140px;
+  padding: 16px;
+  border-radius: 14px;
+  border: 1.5px solid #ddd;
+  font-size: 15px;
+  font-family: inherit;
+  resize: none;
+  display: block;
+  margin: 0 auto;
+  transition: border-color 0.3s;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #c97b84;
+}
+
+button {
+  width: 100%;
+  max-width: 100%;
+  padding: 14px;
+  border-radius: 30px;
+  border: none;
+  background: #c97b84;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-top: 18px;
+  display: block;
+}
+
+button:hover {
+  background: #b86b74;
+  transform: translateY(-2px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+.success {
+  display: none;
+  margin-top: 22px;
+  color: #4caf50;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.next-btn-wrap {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.next-btn {
+  display: inline-block;
+  padding: 14px 40px;
+  background: linear-gradient(135deg, #b56f76 0%, #c97b84 100%);
+  color: white;
+  text-decoration: none;
+  border-radius: 50px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.next-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+}
+
+.next-btn:active {
+  transform: translateY(0);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 600px) {
+  .container {
+    padding: 25px 20px;
+    border-radius: 15px;
+  }
+
+  h1 {
+    font-size: 28px;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    margin-bottom: 20px;
+  }
+
+  textarea {
+    height: 120px;
+    padding: 14px;
+    font-size: 14px;
+  }
+
+  button {
+    padding: 12px;
+    font-size: 15px;
+  }
+
+  .success {
+    font-size: 16px;
+  }
+
+  .next-btn {
+    padding: 12px 30px;
+    font-size: 15px;
+  }
+
+  .next-btn-wrap {
+    margin-top: 25px;
+  }
+}
+
+@media (max-width: 400px) {
+  body {
+    padding: 15px;
+  }
+
+  .container {
+    padding: 20px 15px;
+  }
+
+  h1 {
+    font-size: 24px;
+  }
+
+  .subtitle {
+    font-size: 13px;
+  }
+
+  textarea {
+    height: 100px;
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  button {
+    padding: 11px;
+    font-size: 14px;
+  }
+
+  .next-btn {
+    padding: 11px 25px;
+    font-size: 14px;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>One Last Message 💖</h1>
+  <p class="subtitle">Write anything you want to tell me</p>
+
+  <form id="messageForm">
+    <textarea id="message" placeholder="Type your message here..." required></textarea>
+    <button type="submit">Send 💌</button>
+  </form>
+
+  <div class="success" id="successMsg">
+    Message sent 💖  
+    <br>This means a lot to me ✨
+  </div>
+
+  <!-- Back to Home button -->
+  <div class="next-btn-wrap">
+    <a href="index.html" class="next-btn">⇽ Back to Home</a>
+  </div>
+</div>
+
+<script>
+const form = document.getElementById("messageForm");
+const successMsg = document.getElementById("successMsg");
+
+form.addEventListener("submit", e => {
+  e.preventDefault();
+
+  fetch("https://script.google.com/macros/s/AKfycbwM3zhIvCeyD5vs9KRTnMSEv3nBVzinA73N24Fl7o7fqNbpZ9n3m9n4lsaXP-1Hssf_/exec", {
+    method: "POST",
+    mode: "no-cors",
+    body: JSON.stringify({
+      message: document.getElementById("message").value
+    })
+  })
+  .then(() => {
+    form.style.display = "none";
+    successMsg.style.display = "block";
+  })
+  .catch(() => alert("Something went wrong 😢"));
+});
+</script>
+
+</body>
+</html>
